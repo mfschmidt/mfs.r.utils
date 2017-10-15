@@ -1,17 +1,19 @@
-Package: mfsplot
-Title: Plots Mike Uses Again and Again
+Package: mfs.r.utils
+Title: Utilities Mike Often Uses
 Version: 0.1.0
 Authors@R: person("Mike", "Schmidt",
                   email="mikeschmidt@schmidtgracen.com",
                   role=c("aut","cre"))
-Description: mfsplot wraps complex ggplot2 plots into simple functions with
+Description: mfs_r_utils is a collection of functions written for myself to make
+    my code cleaner, more concise, and consistent. Most of this package just
+    wraps complex ggplot2 plots into simple functions with
     reasonable defaults so I can call them cleanly without wasting dozens of
     lines of code to redefine colors and themes. They also often overlay
-    several plots so one mfsplot is a one stop shop for information.
+    several plots so one mfs_r_utils plot is a one-stop-shop for information.
 Depends: R (>= 3.1.0)
 License: MIT + file LICENSE
+URL: https://github.com/mfschmidt/mfs_r_utils
 LazyData: true
 Imports:
-    ggplot2 (>= 2.2.0),
-    gridExtra (>= 2.3.0)
+    ggplot2 (>= 2.2.0)
 RoxygenNote: 6.0.1
