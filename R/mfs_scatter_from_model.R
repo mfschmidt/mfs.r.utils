@@ -36,10 +36,18 @@ mfs_scatter_from_model <- function(model, xlab="", ylab="", title="") {
                             confint(profile(model), level = 0.95)[main_ind,"2.5 %"],
                             confint(profile(model), level = 0.95)[main_ind,"97.5 %"] )
     
+    # Where to draw the ADJUSTED line from the linear model?
+    # This isn't necessarily the same as doing geom_smooth because of glm adjustments
+    initial_y = xmin * coef(summary(model))[main_ind,"Estimate"] + coef(summary(model))["(Intercept)","Estimate"]
+    final_y = xmax * coef(summary(model))[main_ind,"Estimate"] + coef(summary(model))["(Intercept)","Estimate"]
+    
     # Build the plot
     p <- ggplot2::ggplot(data=model$data, aes_string(x=main_ind, y=main_dep))
     p <- p + ggplot2::geom_point(color="grey", shape=3)
     p <- p + ggplot2::geom_smooth(method="loess")
+    p <- p + ggplot2::geom_abline(intercept=coef(summary(model))["(Intercept)","Estimate"],
+                                  slope=coef(summary(model))[main_ind,"Estimate"],
+                                  color="black")
     p <- p + ggplot2::ggtitle(usable_title)
     p <- p + ggplot2::theme_bw()
     p <- p + mfs_annotate_empty(s=quant_string, xs=model$model[,2], ys=model$model[,1])
