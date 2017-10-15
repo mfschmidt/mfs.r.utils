@@ -38,7 +38,7 @@ mfs_scatter_from_model <- function(model, xlab="", ylab="", title="") {
     
     # Build the plot
     p <- ggplot2::ggplot(data=model$data, aes_string(x=main_ind, y=main_dep))
-    p <- p + ggplot2::geom_point()
+    p <- p + ggplot2::geom_point(aes(colour="gray", shape="+"))
     p <- p + ggplot2::geom_smooth(method="loess")
     p <- p + ggplot2::ggtitle(usable_title)
     p <- p + ggplot2::theme_bw()
