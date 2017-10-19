@@ -15,7 +15,7 @@
 #' mfs_scatter_from_model(glm(y~x,data=z), xlab="Independent variable")
 
 
-mfs_scatter_from_model <- function(model, xlab="", ylab="", title="", color_scheme="blackish") {
+mfs_scatter_from_model <- function(model, xlab="__", ylab="__", title="__", color_scheme="blackish") {
     
     # Find our bearings
     xmin <- min(model$model[,2])
@@ -26,9 +26,12 @@ mfs_scatter_from_model <- function(model, xlab="", ylab="", title="", color_sche
     # Determine actual labels to use
     main_dep <- names(model$model[1])
     main_ind <- names(model$model[2])
-    usable_x_lab <- if(length(xlab)>0) xlab else main_ind
-    usable_y_lab <- if(length(ylab)>0) ylab else main_dep
-    usable_title <- if(length(title)>0) title else paste(main_dep,"vs",main_ind)
+    usable_x_lab <- if(xlab=="__") main_ind else xlab
+    usable_y_lab <- if(ylab=="__") main_dep else ylab
+    usable_title <- if(title=="__") paste(usable_y_lab, "vs", usable_x_lab) else title
+    # Diagnostics, if necessary
+    # print(paste0("Given ", title, "(", nchar(title), "), ", xlab, "(", nchar(xlab), "), ", ylab, "(", nchar(ylab), ")"))
+    # print(paste0("\"", main_dep, " vs ", main_ind, "\" or the final \"", usable_title, "\""), quote=FALSE)
     
     # Color schemes for multiple shades of a single hue
     color_schemes <- list()
@@ -45,6 +48,7 @@ mfs_scatter_from_model <- function(model, xlab="", ylab="", title="", color_sche
                                   slope=coef(summary(model))[main_ind,"Estimate"],
                                   color=color_schemes[[color_scheme]][1])
     p <- p + ggplot2::ggtitle(usable_title)
+    p <- p + ggplot2::labs(x=usable_x_lab, y=usable_y_lab)
     p <- p + ggplot2::theme_bw()
     p <- p + mfs_annotate_empty(s=mfs_glm_string(model), xs=model$model[,2], ys=model$model[,1],
                                 text_color=color_schemes[[color_scheme]][1])
