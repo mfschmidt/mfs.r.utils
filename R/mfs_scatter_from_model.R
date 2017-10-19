@@ -2,11 +2,12 @@
 #'
 #' This function uses ggplot2 to create a scatterplot with a line of best fit
 #'     and a loess smoother overlaid, based on an existing linear model.
-#' @param model A linear model, returned from lm() or glm()
+#' @param model A linear model, returned from glm()
 #' @param xlab Optionally, provide a label for the x axis
 #' @param ylab Optionally, provide a label for the y axis
 #' @param title Optionally, provide a title to override the default
-#' @keywords scatter loess plot lm glm
+#' @param color_scheme Optionally, a color scheme for the plot, "blackish" "bluish" "reddish" "greenish"
+#' @keywords scatter loess plot glm
 #' @export
 #' @examples
 #' mfs_scatter_from_model(glm(y~x,data=z))
@@ -14,7 +15,7 @@
 #' mfs_scatter_from_model(glm(y~x,data=z), xlab="Independent variable")
 
 
-mfs_scatter_from_model <- function(model, xlab="", ylab="", title="") {
+mfs_scatter_from_model <- function(model, xlab="", ylab="", title="", color_scheme="blackish") {
     
     # Find our bearings
     xmin <- min(model$model[,2])
@@ -29,28 +30,24 @@ mfs_scatter_from_model <- function(model, xlab="", ylab="", title="") {
     usable_y_lab <- if(length(ylab)>0) ylab else main_dep
     usable_title <- if(length(title)>0) title else paste(main_dep,"vs",main_ind)
     
-    # Prepare the quantitative data for presentation
-    suppressMessages(confint(model))
-    quant_string <- sprintf("%0.2f (%0.2f,%0.2f)",
-                            coef(summary(model))[main_ind,"Estimate"],
-                            confint(profile(model), level = 0.95)[main_ind,"2.5 %"],
-                            confint(profile(model), level = 0.95)[main_ind,"97.5 %"] )
-    
-    # Where to draw the ADJUSTED line from the linear model?
-    # This isn't necessarily the same as doing geom_smooth because of glm adjustments
-    initial_y = xmin * coef(summary(model))[main_ind,"Estimate"] + coef(summary(model))["(Intercept)","Estimate"]
-    final_y = xmax * coef(summary(model))[main_ind,"Estimate"] + coef(summary(model))["(Intercept)","Estimate"]
+    # Color schemes for multiple shades of a single hue
+    color_schemes <- list()
+    color_schemes[["blackish"]] <- c("black", "darkgrey", "lightgrey")
+    color_schemes[["bluish"]] <- c("blue", "royalblue", "skyblue")
+    color_schemes[["reddish"]] <- c("firebrick", "tomato", "pink")
+    color_schemes[["greenish"]] <- c("darkgreen", "green", "lightgreen")
     
     # Build the plot
     p <- ggplot2::ggplot(data=model$data, aes_string(x=main_ind, y=main_dep))
-    p <- p + ggplot2::geom_point(color="grey", shape=3)
-    p <- p + ggplot2::geom_smooth(method="loess")
+    p <- p + ggplot2::geom_point(color=color_schemes[[color_scheme]][3], shape=3)
+    p <- p + ggplot2::geom_smooth(method="loess", linetype="dotted", color=color_schemes[[color_scheme]][2])
     p <- p + ggplot2::geom_abline(intercept=coef(summary(model))["(Intercept)","Estimate"],
                                   slope=coef(summary(model))[main_ind,"Estimate"],
-                                  color="black")
+                                  color=color_schemes[[color_scheme]][1])
     p <- p + ggplot2::ggtitle(usable_title)
     p <- p + ggplot2::theme_bw()
-    p <- p + mfs_annotate_empty(s=quant_string, xs=model$model[,2], ys=model$model[,1])
+    p <- p + mfs_annotate_empty(s=mfs_glm_string(model), xs=model$model[,2], ys=model$model[,1],
+                                text_color=color_schemes[[color_scheme]][1])
     
     return(p)
 }

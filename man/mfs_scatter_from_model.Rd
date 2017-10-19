@@ -4,16 +4,19 @@
 \alias{mfs_scatter_from_model}
 \title{A Lined Scatterplot Function}
 \usage{
-mfs_scatter_from_model(model, xlab = "", ylab = "", title = "")
+mfs_scatter_from_model(model, xlab = "", ylab = "", title = "",
+  color_scheme = "blackish")
 }
 \arguments{
-\item{model}{A linear model, returned from lm() or glm()}
+\item{model}{A linear model, returned from glm()}
 
 \item{xlab}{Optionally, provide a label for the x axis}
 
 \item{ylab}{Optionally, provide a label for the y axis}
 
 \item{title}{Optionally, provide a title to override the default}
+
+\item{color_scheme}{Optionally, a color scheme for the plot, "blackish" "bluish" "reddish" "greenish"}
 }
 \description{
 This function uses ggplot2 to create a scatterplot with a line of best fit
@@ -25,7 +28,6 @@ mfs_scatter_from_model(glm(y~x,data=z), title="A great plot")
 mfs_scatter_from_model(glm(y~x,data=z), xlab="Independent variable")
 }
 \keyword{glm}
-\keyword{lm}
 \keyword{loess}
 \keyword{plot}
 \keyword{scatter}

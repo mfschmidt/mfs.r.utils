@@ -4,7 +4,7 @@
 \alias{mfs_annotate_empty}
 \title{Place an annotation on the least busy corner of a plot}
 \usage{
-mfs_annotate_empty(s, xs, ys)
+mfs_annotate_empty(s, xs, ys, opp = FALSE, text_color = "black")
 }
 \arguments{
 \item{s}{A text string for use as an annotation}
@@ -12,6 +12,10 @@ mfs_annotate_empty(s, xs, ys)
 \item{xs}{The list of x values used in the plot}
 
 \item{ys}{The list of y values used in the plot}
+
+\item{opp}{If True, indicates to put the annotation in the opposite corner of the least crowded}
+
+\item{text_color}{The color of the text}
 }
 \description{
 This function returns a ggplot2 annotation grob for addition to an existing

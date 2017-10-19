@@ -7,13 +7,15 @@
 #' @param s A text string for use as an annotation
 #' @param xs The list of x values used in the plot
 #' @param ys The list of y values used in the plot
+#' @param opp If True, indicates to put the annotation in the opposite corner of the least crowded
+#' @param text_color The color of the text
 #' @keywords ggplot2 annotate text
 #' @export
 #' @examples
 #' ggplot2(...) + mfs_annotate_empty("a comment", data[,"y"], data[,"x"])
 
 
-mfs_annotate_empty <- function(s, xs, ys) {
+mfs_annotate_empty <- function(s, xs, ys, opp=FALSE, text_color="black") {
     
     # Determine how crowded corners of the plot will be
     x_thresholds <- c(
@@ -39,13 +41,29 @@ mfs_annotate_empty <- function(s, xs, ys) {
     
     # Provide the annotation, justified and positioned according to crowdedness
     if( point_density[1, 1] == min(point_density) ) {
-        return( ggplot2::annotate("text", label=s, hjust=0.0, vjust=1.0, x=x_thresholds[1], y=y_thresholds[5]))
+        if(opp) {
+            return( ggplot2::annotate("text", label=s, color=text_color, hjust=1.0, vjust=0.0, x=x_thresholds[5], y=y_thresholds[1]))
+        } else {
+            return( ggplot2::annotate("text", label=s, color=text_color, hjust=0.0, vjust=1.0, x=x_thresholds[1], y=y_thresholds[5]))
+        }
     } else if ( point_density[2, 1] == min(point_density) ) {
-        return( ggplot2::annotate("text", label=s, hjust=0.0, vjust=0.0, x=x_thresholds[1], y=y_thresholds[1]))
+        if(opp) {
+            return( ggplot2::annotate("text", label=s, color=text_color, hjust=1.0, vjust=1.0, x=x_thresholds[5], y=y_thresholds[5]))
+        } else {
+            return( ggplot2::annotate("text", label=s, color=text_color, hjust=0.0, vjust=0.0, x=x_thresholds[1], y=y_thresholds[1]))
+        }
     } else if ( point_density[1, 2] == min(point_density) ) {
-        return( ggplot2::annotate("text", label=s, hjust=1.0, vjust=1.0, x=x_thresholds[5], y=y_thresholds[5]))
+        if(opp) {
+            return( ggplot2::annotate("text", label=s, color=text_color, hjust=0.0, vjust=0.0, x=x_thresholds[1], y=y_thresholds[1]))
+        } else {
+            return( ggplot2::annotate("text", label=s, color=text_color, hjust=1.0, vjust=1.0, x=x_thresholds[5], y=y_thresholds[5]))
+        }
     } else if ( point_density[2, 2] == min(point_density) ) {
-        return( ggplot2::annotate("text", label=s, hjust=1.0, vjust=0.0, x=x_thresholds[5], y=y_thresholds[1]))
+        if(opp) {
+            return( ggplot2::annotate("text", label=s, color=text_color, hjust=0.0, vjust=1.0, x=x_thresholds[1], y=y_thresholds[5]))
+        } else {
+            return( ggplot2::annotate("text", label=s, color=text_color, hjust=1.0, vjust=0.0, x=x_thresholds[5], y=y_thresholds[1]))
+        }
     }
     
     # This should never happen, but will "work" and give an obvious indication if I've overlooked something.
