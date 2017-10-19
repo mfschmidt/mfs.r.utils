@@ -24,13 +24,14 @@ mfs_glm_string <- function(model, s.term="", s.units="", s.form="%0.2f", p.level
     s.ci <- sprintf(" (%d%%CI: ", 100 * (1.00 - p.level))
     s.lower <- sprintf("%0.1f %%", 100 * p.level/2.0)
     s.upper <- sprintf("%0.1f %%", 100 * (1.00 - (p.level/2.0)))
-    if(model$coefficients[[s.term]] > 100.0) {
+    mag <- abs(model$coefficients[[s.term]])
+    if(mag > 100.0) {
         s.form="%0.0f"
-    } else if(model$coefficients[[s.term]] > 10.0) {
+    } else if(mag > 10.0) {
         s.form="%0.1f"
-    } else if(model$coefficients[[s.term]] < 0.001) {
+    } else if(mag < 0.001) {
         s.form="%0.4f"
-    } else if(model$coefficients[[s.term]] < 0.01) {
+    } else if(mag < 0.01) {
         s.form="%0.3f"
     }
     if(do.p) {
