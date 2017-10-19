@@ -17,6 +17,12 @@
 
 mfs_annotate_empty <- function(s, xs, ys, opp=FALSE, text_color="black") {
     
+    # If this is a two-factor distribution, just center it between the values and don't bother counting
+    if(length(levels(as.factor(ys))) == 2) {
+        yval = if(is.numeric(ys)) mean(unique(ys)) else 1.5
+        return( ggplot2::annotate("text", label=s, color=text_color, hjust=0.5, vjust=0.5, x=mean(xs), y=yval) )
+    }
+
     # Determine how crowded corners of the plot will be
     x_thresholds <- c(
         min(xs),
