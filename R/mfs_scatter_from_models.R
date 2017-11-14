@@ -56,14 +56,14 @@ mfs_scatter_from_models <- function(model1, model2, xlab="", y1lab="", y2lab="",
     color_schemes[["greenish"]] <- c("darkgreen", "green", "lightgreen")
     
     # Build the plot
-    p <- ggplot2::ggplot(data=model1$data, aes_string(x=main_ind, y=main_dep))
-    p <- p + ggplot2::geom_point(data=model1$data, aes_string(x=main_ind, y=main_dep),
+    p <- ggplot2::ggplot(data=model1$data, ggplot2::aes_string(x=main_ind, y=main_dep))
+    p <- p + ggplot2::geom_point(data=model1$data, ggplot2::aes_string(x=main_ind, y=main_dep),
                                  color=color_schemes[["bluish"]][3], shape=3)
-    p <- p + ggplot2::geom_point(data=model2$data, aes_string(x=main_ind, y=secd_dep),
+    p <- p + ggplot2::geom_point(data=model2$data, ggplot2::aes_string(x=main_ind, y=secd_dep),
                                  color=color_schemes[["reddish"]][3], shape=4)
-    p <- p + ggplot2::geom_smooth(data=model1$data, aes_string(x=main_ind, y=main_dep),
+    p <- p + ggplot2::geom_smooth(data=model1$data, ggplot2::aes_string(x=main_ind, y=main_dep),
                                   method="loess", linetype="dotted", color=color_schemes[["bluish"]][2])
-    p <- p + ggplot2::geom_smooth(data=model2$data, aes_string(x=main_ind, y=secd_dep),
+    p <- p + ggplot2::geom_smooth(data=model2$data, ggplot2::aes_string(x=main_ind, y=secd_dep),
                                   method="loess", linetype="dotted", color=color_schemes[["reddish"]][2])
     p <- p + ggplot2::geom_abline(intercept=coef(summary(model1))["(Intercept)","Estimate"],
                                   slope=coef(summary(model1))[main_ind,"Estimate"],

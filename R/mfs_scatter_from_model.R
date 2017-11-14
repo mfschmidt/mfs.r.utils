@@ -41,7 +41,7 @@ mfs_scatter_from_model <- function(model, xlab="__", ylab="__", title="__", colo
     color_schemes[["greenish"]] <- c("darkgreen", "green", "lightgreen")
     
     # Build the plot
-    p <- ggplot2::ggplot(data=model$data, aes_string(x=main_ind, y=main_dep))
+    p <- ggplot2::ggplot(data=model$data, ggplot2::aes_string(x=main_ind, y=main_dep))
     p <- p + ggplot2::geom_point(color=color_schemes[[color_scheme]][3], shape=3)
     p <- p + ggplot2::geom_smooth(method="loess", linetype="dotted", color=color_schemes[[color_scheme]][2])
     p <- p + ggplot2::geom_abline(intercept=coef(summary(model))["(Intercept)","Estimate"],
