@@ -14,7 +14,7 @@ mfs_glm_string(model, s.term = "", s.units = "", s.form = "\%0.2f",
 
 \item{s.units}{Optionally, report units as a string, like "mm" or "lbs/in"}
 
-\item{s.form}{a sprintf string, default "%0.2f", to indicate the format of the numeric output}
+\item{s.form}{a sprintf string, default "\%0.2f", to indicate the format of the numeric output}
 
 \item{p.level}{If you require a p-threshold other than 0.05, set it here}
 
