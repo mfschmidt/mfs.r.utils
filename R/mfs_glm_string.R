@@ -5,7 +5,7 @@
 #' @param model A linear model, returned from glm()
 #' @param s.term Optionally, specify which variable in your model you are reporting. It must match the model contents.
 #' @param s.units Optionally, report units as a string, like "mm" or "lbs/in"
-#' @param s.form a sprintf string, default "%0.2f", to indicate the format of the numeric output
+#' @param s.form a sprintf string, default "\%0.2f", to indicate the format of the numeric output
 #' @param p.level If you require a p-threshold other than 0.05, set it here
 #' @param do.p If you don't want p-value reported, set this to FALSE
 #' @keywords string p-value confidence interval summary
