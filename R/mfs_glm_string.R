@@ -2,7 +2,7 @@
 #'
 #' This function queries a generalized linear model and produces a string
 #'     to succinctly quantify the results. Useful for annotating plots.
-#' @param model A linear model, returned from glm()
+#' @param model A generalized linear model, returned from glm()
 #' @param s.term Optionally, specify which variable in your model you are reporting. It must match the model contents.
 #' @param s.units Optionally, report units as a string, like "mm" or "lbs/in"
 #' @param s.form a sprintf string, default "\%0.2f", to indicate the format of the numeric output
@@ -17,7 +17,7 @@
 mfs_glm_string <- function(model, s.term="", s.units="", s.form="%0.2f", p.level=0.05, do.p=TRUE) {
     
     # Prime the confint pump
-    suppressMessages(confint(model))
+    cm = suppressMessages(confint(model))
     
     # Derive some substrings
     if(s.term=="") s.term = names(model$model[2])
@@ -45,9 +45,9 @@ mfs_glm_string <- function(model, s.term="", s.units="", s.form="%0.2f", p.level
         sprintf(s.form, model$coefficients[[s.term]]),
         s.units,
         s.ci,
-        sprintf(s.form, confint(model)[s.term, s.lower]),
+        sprintf(s.form, cm[s.term, s.lower]),
         ",",
-        sprintf(s.form, confint(model)[s.term, s.upper]),
+        sprintf(s.form, cm[s.term, s.upper]),
         ") ",
         s.p
     ))
