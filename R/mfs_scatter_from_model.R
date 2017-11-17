@@ -2,7 +2,7 @@
 #'
 #' This function uses ggplot2 to create a scatterplot with a line of best fit
 #'     and a loess smoother overlaid, based on an existing generalized linear model.
-#' @param model A linear model, returned from glm()
+#' @param model A linear model, returned from glm() or lm()
 #' @param xlab Optionally, provide an alternative label for the x axis
 #' @param ylab Optionally, provide an alternative label for the y axis
 #' @param title Optionally, provide a title to override the default
@@ -24,8 +24,8 @@ mfs_scatter_from_model <- function(model, xlab="__", ylab="__", title="__", colo
     ymax <- max(model$model[,1])
     
     # Determine actual labels to use
-    main_dep <- names(model$model[1])
-    main_ind <- names(model$model[2])
+    main_dep <- names(model$model)[1]
+    main_ind <- names(model$model)[2]
     usable_x_lab <- if(xlab=="__") main_ind else xlab
     usable_y_lab <- if(ylab=="__") main_dep else ylab
     usable_title <- if(title=="__") paste(usable_y_lab, "vs", usable_x_lab) else title
@@ -42,7 +42,7 @@ mfs_scatter_from_model <- function(model, xlab="__", ylab="__", title="__", colo
     
     # Build the plot
     p <- ggplot2::ggplot(
-        data=model$data,
+        data=model$model,
         ggplot2::aes_string(x=main_ind, y=main_dep)
     )
     p <- p + ggplot2::geom_point(color=color_schemes[[color_scheme]][3], shape=3)
