@@ -47,7 +47,7 @@ mfs_scatter_from_multimodel <- function(model, xlab="__", ylab="__", title="__",
     p <- p + ggplot2::geom_smooth(method="loess", linetype="dotted", color=color_schemes[[color_scheme]][2])
     # draw the raw line of ONLY main independent variable
     main_slope = coef(summary(model))[main_ind,"Estimate"]
-    added_slope = coef(summary(model))[paste0(main_ind,":",secd_ind),"Estimate"]
+    added_slope = coef(summary(model))[paste0(main_ind,":",secd_ind,levels(model$model[[secd_ind]])[2]),"Estimate"]
     main_intercept = coef(summary(model))["(Intercept)","Estimate"]
     p <- p + ggplot2::geom_abline(intercept=main_intercept,
                                   slope=main_slope,
@@ -55,7 +55,7 @@ mfs_scatter_from_multimodel <- function(model, xlab="__", ylab="__", title="__",
                                   linetype="solid")
     # draw the adjusted lines of main independent variable as secondary variable changes
     p <- p + ggplot2::geom_abline(intercept=main_intercept,
-                                  slope=main_slope + added_slope * min(model$model[[secd_ind]]),
+                                  slope=main_slope + added_slope * min(as.numeric(model$model[[secd_ind]])),
                                   color=color_schemes[[color_scheme]][1],
                                   linetype="dotted")
     p <- p + ggplot2::geom_abline(intercept=main_intercept,
@@ -63,21 +63,21 @@ mfs_scatter_from_multimodel <- function(model, xlab="__", ylab="__", title="__",
                                   color=color_schemes[[color_scheme]][1],
                                   linetype="dotted")
     p <- p + ggplot2::geom_abline(intercept=main_intercept,
-                                  slope=main_slope + added_slope * max(model$model[[secd_ind]]),
+                                  slope=main_slope + added_slope * max(as.numeric(model$model[[secd_ind]])),
                                   color=color_schemes[[color_scheme]][1],
                                   linetype="dotted")
     # annotate the lines for min and max
-    if(main_slope + added_slope * min(model$model[[secd_ind]]) < main_slope + added_slope * max(model$model[[secd_ind]])) {
+    if(main_slope + added_slope * min(as.numeric(model$model[[secd_ind]])) < main_slope + added_slope * max(as.numeric(model$model[[secd_ind]])) ) {
         # increasing secd_ind increases slope
-        min_slope = main_slope + added_slope * min(model$model[[secd_ind]])
-        max_slope = main_slope + added_slope * max(model$model[[secd_ind]])
-        min_y = main_intercept + min_slope * min(model$model[[main_ind]])
-        max_y = main_intercept + max_slope * max(model$model[[main_ind]])
+        min_slope = main_slope + added_slope * min(as.numeric(model$model[[secd_ind]]))
+        max_slope = main_slope + added_slope * max(as.numeric(model$model[[secd_ind]]))
+        min_y = main_intercept + min_slope * min(as.numeric(model$model[[main_ind]]))
+        max_y = main_intercept + max_slope * max(as.numeric(model$model[[main_ind]]))
         p <- p + ggplot2::annotate("text", label=paste("min",secd_ind,sprintf("%0.2f",min_slope)),
-                                   x=min(model$model[[main_ind]]), y=min_y,
+                                   x=min(as.numeric(model$model[[main_ind]])), y=min_y,
                                    hjust = 0.0, vjust = 0.0)
         p <- p + ggplot2::annotate("text", label=paste("max",secd_ind,sprintf("%0.2f",max_slope)),
-                                   x=max(model$model[[main_ind]]), y=max_y,
+                                   x=max(as.numeric(model$model[[main_ind]])), y=max_y,
                                    hjust = 1.0, vjust = 0.0)
     }
     p <- p + ggplot2::ggtitle(usable_title)
