@@ -2,6 +2,7 @@
 
 export(mfs_annotate_empty)
 export(mfs_glm_string)
+export(mfs_histo_density)
 export(mfs_p_string)
 export(mfs_scatter_from_model)
 export(mfs_scatter_from_models)

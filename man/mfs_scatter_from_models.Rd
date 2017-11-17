@@ -5,20 +5,24 @@
 \title{A Lined Scatterplot Function}
 \usage{
 mfs_scatter_from_models(model1, model2, xlab = "", y1lab = "", y2lab = "",
-  title = "")
+  title = "", scheme1 = "bluish", scheme2 = "reddish")
 }
 \arguments{
-\item{model1}{A linear model, returned from glm()}
+\item{model1}{A generalized linear model, returned from glm()}
 
-\item{model2}{A linear model, returned from glm()}
+\item{model2}{A generalized linear model, returned from glm()}
 
 \item{xlab}{Optionally, provide a label for the x axis}
 
-\item{y1lab}{Optionally, provide a label for the y axis}
+\item{y1lab}{Optionally, provide a label for the first y axis}
 
-\item{y2lab}{Optionally, provide a label for the y axis}
+\item{y2lab}{Optionally, provide a label for the second y axis}
 
 \item{title}{Optionally, provide a title to override the default}
+
+\item{scheme1}{override the default "bluish" colors for plotting model1}
+
+\item{scheme2}{override the default "reddish" colors for plotting model2}
 }
 \description{
 This function uses ggplot2 to create a multi-scatterplot with a line of best fit

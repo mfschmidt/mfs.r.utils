@@ -8,11 +8,11 @@ mfs_scatter_from_model(model, xlab = "__", ylab = "__", title = "__",
   color_scheme = "blackish")
 }
 \arguments{
-\item{model}{A linear model, returned from glm()}
+\item{model}{A linear model, returned from glm() or lm()}
 
-\item{xlab}{Optionally, provide a label for the x axis}
+\item{xlab}{Optionally, provide an alternative label for the x axis}
 
-\item{ylab}{Optionally, provide a label for the y axis}
+\item{ylab}{Optionally, provide an alternative label for the y axis}
 
 \item{title}{Optionally, provide a title to override the default}
 
@@ -20,7 +20,7 @@ mfs_scatter_from_model(model, xlab = "__", ylab = "__", title = "__",
 }
 \description{
 This function uses ggplot2 to create a scatterplot with a line of best fit
-    and a loess smoother overlaid, based on an existing linear model.
+    and a loess smoother overlaid, based on an existing generalized linear model.
 }
 \examples{
 mfs_scatter_from_model(glm(y~x,data=z))

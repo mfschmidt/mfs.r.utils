@@ -8,7 +8,7 @@ mfs_glm_string(model, s.term = "", s.units = "", s.form = "\%0.2f",
   p.level = 0.05, do.p = TRUE)
 }
 \arguments{
-\item{model}{A linear model, returned from glm()}
+\item{model}{A generalized linear model, returned from glm()}
 
 \item{s.term}{Optionally, specify which variable in your model you are reporting. It must match the model contents.}
 
