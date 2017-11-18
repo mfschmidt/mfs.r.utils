@@ -16,6 +16,7 @@
 
 
 mfs_scatter_from_multimodel <- function(model, xlab="__", ylab="__", title="__", color_scheme="blackish") {
+    use_colors = mfs.r.utils::mfs_color_scheme(color_scheme)
     
     # Find our bearings
     xmin <- min(model$model[,2])
@@ -34,37 +35,30 @@ mfs_scatter_from_multimodel <- function(model, xlab="__", ylab="__", title="__",
     # print(paste0("Given ", title, "(", nchar(title), "), ", xlab, "(", nchar(xlab), "), ", ylab, "(", nchar(ylab), ")"))
     # print(paste0("\"", main_dep, " vs ", main_ind, "\" or the final \"", usable_title, "\""), quote=FALSE)
     
-    # Color schemes for multiple shades of a single hue
-    color_schemes <- list()
-    color_schemes[["blackish"]] <- c("black", "darkgrey", "lightgrey")
-    color_schemes[["bluish"]] <- c("blue", "royalblue", "skyblue")
-    color_schemes[["reddish"]] <- c("firebrick", "tomato", "pink")
-    color_schemes[["greenish"]] <- c("darkgreen", "green", "lightgreen")
-    
     # Build the plot
     p <- ggplot2::ggplot(data=model$data, ggplot2::aes_string(x=main_ind, y=main_dep))
-    p <- p + ggplot2::geom_point(color=color_schemes[[color_scheme]][3], shape=3)
-    p <- p + ggplot2::geom_smooth(method="loess", linetype="dotted", color=color_schemes[[color_scheme]][2])
+    p <- p + ggplot2::geom_point(color=use_colors[3], shape=3)
+    p <- p + ggplot2::geom_smooth(method="loess", linetype="dotted", color=use_colors[2])
     # draw the raw line of ONLY main independent variable
     main_slope = coef(summary(model))[main_ind,"Estimate"]
     added_slope = coef(summary(model))[paste0(main_ind,":",secd_ind,levels(model$model[[secd_ind]])[2]),"Estimate"]
     main_intercept = coef(summary(model))["(Intercept)","Estimate"]
     p <- p + ggplot2::geom_abline(intercept=main_intercept,
                                   slope=main_slope,
-                                  color=color_schemes[[color_scheme]][2],
+                                  color=use_colors[2],
                                   linetype="solid")
     # draw the adjusted lines of main independent variable as secondary variable changes
     p <- p + ggplot2::geom_abline(intercept=main_intercept,
                                   slope=main_slope + added_slope * min(as.numeric(model$model[[secd_ind]])),
-                                  color=color_schemes[[color_scheme]][1],
+                                  color=use_colors[1],
                                   linetype="dotted")
     p <- p + ggplot2::geom_abline(intercept=main_intercept,
                                   slope=main_slope + added_slope * mean(as.numeric(model$model[[secd_ind]])),
-                                  color=color_schemes[[color_scheme]][1],
+                                  color=use_colors[1],
                                   linetype="dotted")
     p <- p + ggplot2::geom_abline(intercept=main_intercept,
                                   slope=main_slope + added_slope * max(as.numeric(model$model[[secd_ind]])),
-                                  color=color_schemes[[color_scheme]][1],
+                                  color=use_colors[1],
                                   linetype="dotted")
     # annotate the lines for min and max
     if(main_slope + added_slope * min(as.numeric(model$model[[secd_ind]])) < main_slope + added_slope * max(as.numeric(model$model[[secd_ind]])) ) {
@@ -84,7 +78,7 @@ mfs_scatter_from_multimodel <- function(model, xlab="__", ylab="__", title="__",
     p <- p + ggplot2::labs(x=usable_x_lab, y=usable_y_lab)
     p <- p + ggplot2::theme_bw()
     p <- p + mfs_annotate_empty(s=mfs_glm_string(model), xs=model$model[,2], ys=model$model[,1],
-                                text_color=color_schemes[[color_scheme]][1])
+                                text_color=use_colors[1])
     
     return(p)
 }

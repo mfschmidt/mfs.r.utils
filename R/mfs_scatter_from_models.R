@@ -21,7 +21,9 @@
 #' mfs_scatter_from_models(glm(y~x,data=d), glm(z~x,data=d), xlab="Independent variable")
 
 
-mfs_scatter_from_models <- function(model1, model2, xlab="", y1lab="", y2lab="", title="", scheme1="bluish", scheme2="reddish") {
+mfs_scatter_from_models <- function(model1, model2, xlab="", y1lab="", y2lab="", title="", color_scheme_1="bluish", color_scheme_2="reddish") {
+    use_colors_1 <- mfs.r.utils::mfs_color_scheme(color_scheme_1)
+    use_colors_2 <- mfs.r.utils::mfs_color_scheme(color_scheme_2)
     
     # Ensure we have identical x-axes in each model
     if (length(model1$model[,2]) != length(model2$model[,2])) {
@@ -71,38 +73,31 @@ mfs_scatter_from_models <- function(model1, model2, xlab="", y1lab="", y2lab="",
     usable_y2_lab <- if(length(y2lab)>0) y2lab else secd_dep
     usable_title <- if(length(title)>0) title else paste(main_dep,"vs",main_ind)
     
-    # Color schemes for multiple shades of a single hue
-    color_schemes <- list()
-    color_schemes[["blackish"]] <- c("black", "darkgrey", "lightgrey")
-    color_schemes[["bluish"]] <- c("blue", "royalblue", "skyblue")
-    color_schemes[["reddish"]] <- c("firebrick", "tomato", "pink")
-    color_schemes[["greenish"]] <- c("darkgreen", "green", "lightgreen")
-    
     # Build the plot
     p <- ggplot2::ggplot(data=model1$data, ggplot2::aes_string(x=main_ind, y=main_dep))
     p <- p + ggplot2::geom_point(data=model1$data, ggplot2::aes_string(x=main_ind, y=main_dep),
-                                 color=color_schemes[[scheme1]][3], shape=3)
+                                 color=use_colors_1[3], shape=3)
     p <- p + ggplot2::geom_point(data=model2$data, ggplot2::aes_string(x=main_ind, y=secd_dep),
-                                 color=color_schemes[[scheme2]][3], shape=4)
+                                 color=use_colors_2[3], shape=4)
     p <- p + ggplot2::geom_smooth(data=model1$data, ggplot2::aes_string(x=main_ind, y=main_dep),
-                                  method="loess", linetype="dotted", color=color_schemes[[scheme1]][2])
+                                  method="loess", linetype="dotted", color=use_colors_1[2])
     p <- p + ggplot2::geom_smooth(data=model2$data, ggplot2::aes_string(x=main_ind, y=secd_dep),
-                                  method="loess", linetype="dotted", color=color_schemes[[scheme2]][2])
+                                  method="loess", linetype="dotted", color=use_colors_2[2])
     p <- p + ggplot2::geom_abline(intercept=coef(summary(model1))["(Intercept)","Estimate"],
                                   slope=coef(summary(model1))[main_ind,"Estimate"],
-                                  color=color_schemes[[scheme1]][1])
+                                  color=use_colors_1[1])
     p <- p + ggplot2::geom_abline(intercept=coef(summary(model2))["(Intercept)","Estimate"],
                                   slope=coef(summary(model2))[main_ind,"Estimate"],
-                                  color=color_schemes[[scheme2]][1])
+                                  color=use_colors_2[1])
     p <- p + ggplot2::theme_bw()
     p <- p + ggplot2::ggtitle(usable_title)
     p <- p + mfs.r.utils::mfs_annotate_empty(s=mfs_glm_string(model1), xs=model1$model[,2], ys=model1$model[,1],
-                                opp=FALSE, text_color=color_schemes[[scheme1]][1])
+                                opp=FALSE, text_color=use_colors_1[1])
     p <- p + mfs.r.utils::mfs_annotate_empty(s=mfs_glm_string(model2), xs=model2$model[,2], ys=model2$model[,1],
-                                opp=TRUE, text_color=color_schemes[[scheme2]][1])
+                                opp=TRUE, text_color=use_colors_2[1])
     p <- p + ggplot2::theme(
-        axis.text.y = ggplot2::element_text(color=color_schemes[[scheme1]][1]),
-        axis.text.y.right = ggplot2::element_text(color=color_schemes[[scheme2]][1])
+        axis.text.y = ggplot2::element_text(color=use_colors_1[1]),
+        axis.text.y.right = ggplot2::element_text(color=use_colors_2[1])
     )
     p <- p + scale_y_continuous(sec.axis = sec_axis(~.))
     

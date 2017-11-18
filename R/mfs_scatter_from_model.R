@@ -16,6 +16,7 @@
 
 
 mfs_scatter_from_model <- function(model, xlab="__", ylab="__", title="__", color_scheme="blackish") {
+    use_colors <- mfs.r.utils::mfs_color_scheme(color_scheme)
     
     # Find our bearings
     xmin <- min(model$model[,2])
@@ -33,27 +34,20 @@ mfs_scatter_from_model <- function(model, xlab="__", ylab="__", title="__", colo
     # print(paste0("Given ", title, "(", nchar(title), "), ", xlab, "(", nchar(xlab), "), ", ylab, "(", nchar(ylab), ")"))
     # print(paste0("\"", main_dep, " vs ", main_ind, "\" or the final \"", usable_title, "\""), quote=FALSE)
     
-    # Color schemes for multiple shades of a single hue
-    color_schemes <- list()
-    color_schemes[["blackish"]] <- c("black", "darkgrey", "lightgrey")
-    color_schemes[["bluish"]] <- c("blue", "royalblue", "skyblue")
-    color_schemes[["reddish"]] <- c("firebrick", "tomato", "pink")
-    color_schemes[["greenish"]] <- c("darkgreen", "green", "lightgreen")
-    
     # Build the plot
     p <- ggplot2::ggplot(
         data=model$model,
         ggplot2::aes_string(x=main_ind, y=main_dep)
     )
-    p <- p + ggplot2::geom_point(color=color_schemes[[color_scheme]][3], shape=3)
+    p <- p + ggplot2::geom_point(color=use_colors[3], shape=3)
     p <- p + ggplot2::geom_smooth(
         method="loess",
         linetype="dotted",
-        color=color_schemes[[color_scheme]][2])
+        color=use_colors[2])
     p <- p + ggplot2::geom_abline(
         intercept=coef(summary(model))["(Intercept)","Estimate"],
         slope=coef(summary(model))[main_ind,"Estimate"],
-        color=color_schemes[[color_scheme]][1])
+        color=use_colors[1])
     p <- p + ggplot2::ggtitle(usable_title)
     p <- p + ggplot2::labs(x=usable_x_lab, y=usable_y_lab)
     p <- p + ggplot2::theme_bw()
@@ -61,7 +55,7 @@ mfs_scatter_from_model <- function(model, xlab="__", ylab="__", title="__", colo
         s=mfs_glm_string(model),
         xs=model$model[,2],
         ys=model$model[,1],
-        text_color=color_schemes[[color_scheme]][1]
+        text_color=use_colors[1]
     )
     
     return(p)

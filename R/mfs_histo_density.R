@@ -15,12 +15,7 @@
 
 
 mfs_histo_density <- function(d, whichcol, xlab="__", title="__", color_scheme="blackish") {
-    # Color schemes for multiple shades of a single hue
-    color_schemes <- list()
-    color_schemes[["blackish"]] <- c("black", "darkgrey", "lightgrey")
-    color_schemes[["bluish"]] <- c("blue", "royalblue", "skyblue")
-    color_schemes[["reddish"]] <- c("firebrick", "tomato", "pink")
-    color_schemes[["greenish"]] <- c("darkgreen", "green", "lightgreen")
+    use_colors <- mfs.r.utils::mfs_color_scheme(color_scheme)
     
     # Determine actual labels to use
     usable_x_lab <- if(xlab=="__") whichcol else xlab
@@ -35,7 +30,7 @@ mfs_histo_density <- function(d, whichcol, xlab="__", title="__", color_scheme="
     # Generate the histogram
     p <- ggplot(data=d, aes_string(whichcol)) +
         stat_function(
-            col = "red",
+            col = use_colors[3],
             lwd = 2,
             fun=dnorm,
             args=list(
@@ -45,11 +40,11 @@ mfs_histo_density <- function(d, whichcol, xlab="__", title="__", color_scheme="
         ) +
         geom_histogram(
             aes(y=..density..),
-            col="gray75",
-            fill="gray50",
+            col=use_colors[2],
+            fill=use_colors[3],
             bins=50
         ) +
-        geom_density()
+        geom_density(col=use_colors[1])
     # We have to have a p first, to query it for its max y-axis, then add the annotation there.
     return(p + annotate("text", label=s, x=xpos, y=layer_scales(p)$y$range$range[2], hjust=hjust, vjust=1.0))
 }

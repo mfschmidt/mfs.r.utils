@@ -5,7 +5,7 @@
 \title{A Lined Scatterplot Function}
 \usage{
 mfs_scatter_from_models(model1, model2, xlab = "", y1lab = "", y2lab = "",
-  title = "", scheme1 = "bluish", scheme2 = "reddish")
+  title = "", color_scheme_1 = "bluish", color_scheme_2 = "reddish")
 }
 \arguments{
 \item{model1}{A generalized linear model, returned from glm()}
