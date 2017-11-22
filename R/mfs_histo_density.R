@@ -22,14 +22,14 @@ mfs_histo_density <- function(d, whichcol, xlab="__", title="__", color_scheme="
     usable_title <- if(title=="__") paste("Distribution of", usable_x_lab) else title
 
     # Determine skewness and prepare it as an annotation
-    s = skewness(d[[whichcol]])
+    s = moments::skewness(d[[whichcol]])
     hjust = if(s<0) 1.0 else 0.0
     xpos = mean(d[[whichcol]]) + (sd(d[[whichcol]]) / 2)
     s <- sprintf("skew = %0.2f", s)
     
     # Generate the histogram
-    p <- ggplot(data=d, aes_string(whichcol)) +
-        stat_function(
+    p <- ggplot2::ggplot(data=d, aes_string(whichcol)) +
+        ggplot2::stat_function(
             col = use_colors[3],
             lwd = 2,
             fun=dnorm,
@@ -38,13 +38,14 @@ mfs_histo_density <- function(d, whichcol, xlab="__", title="__", color_scheme="
                 sd = sd(d[[whichcol]])
             )
         ) +
-        geom_histogram(
+        ggplot2::geom_histogram(
             aes(y=..density..),
             col=use_colors[2],
             fill=use_colors[3],
             bins=50
         ) +
-        geom_density(col=use_colors[1])
+        ggplot2::geom_density(col=use_colors[1]) +
+        ggplot2::theme_bw()
     # We have to have a p first, to query it for its max y-axis, then add the annotation there.
-    return(p + annotate("text", label=s, x=xpos, y=layer_scales(p)$y$range$range[2], hjust=hjust, vjust=1.0))
+    return(p + ggplot2::annotate("text", label=s, x=xpos, y=layer_scales(p)$y$range$range[2], hjust=hjust, vjust=1.0))
 }
